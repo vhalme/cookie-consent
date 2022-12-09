@@ -1,0 +1,82 @@
+.privacy_language_bar > *{
+        margin-left: 0.5em;
+    }
+#privacy_blockscreen{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.35);
+    z-index: 350;
+}
+
+#privacy_consent_container{
+    position: fixed;
+    padding: 2em 4em;
+    background-color: white;
+    list-style-type: none;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 351;
+    border: 0.05em solid lightgrey;
+    box-shadow: 0 0 0.5em rgba(0,0,0,0.2);
+    max-width: 28em;
+    min-width: 20em;
+}
+
+    #privacy_header{
+        text-align:center;
+    }
+
+    #privacy_text{
+        text-align: justify;
+        line-height: 1.5em;
+    }
+
+    #privacy_consent_option_list{
+        list-style-type: none;
+        margin: 1em 0 0 0;
+        padding: 0;
+    }
+
+    #privacy_consent_option_list > li{
+        margin-bottom: 0.25em;
+    }
+
+    .login_top_button{
+        color: #ffffff;
+    }
+
+    #privacy_buttons{
+        margin: 2em 0;
+        text-align: center;
+
+    }
+
+        #privacy_buttons > button{
+            margin: 0.5em;
+            width: calc(50% - 1em);
+            line-height: 2em;
+        }
+
+
+    #privacy_link{
+        margin-top: 0.5em;
+        text-align: right;
+    }
+
+    .cookie_description{
+        margin-left: 0.8em;
+        padding-left: 0.8em;
+        color: grey;
+        display: block;
+        border-left: 1px grey solid;
+    }
+
+    .cookie_description[data-expanded="false"]{
+        display: none;
+    }
+
+    .cookie_description_expand{
+        cursor: pointer;
+    }

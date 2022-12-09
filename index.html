@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Booky Cookie Consent</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="module">
+      import cookies from './cookies.js'
+      window.cookies = cookies
+      window.onload = function() {
+        cookies.onPageLoad()
+      }
+      cookies.setConsentHandler({
+        'marketing.custobar': function() {
+          console.log("CALL CUSTOBAR INIT")
+          cookies.loadCustobarScript(/* Custobar copmany token */)
+          cookies.loadScript("custom-code-1")
+        },
+        'analytics.google': function() {
+          console.log("CALL GA INIT")
+          cookies.loadGTMScript(/* GTM id */)
+          cookies.loadScript("custom-code-2")
+        },
+        'analytics.facebook': function() {
+          console.log("CALL FB INIT")
+          cookies.loadFBScript(/* FB id */)
+          cookies.loadScript("custom-code-3")
+        }
+      })
+    </script>
+    <script id="custom-code-1">
+      console.log("CUSTOM CODE 1")
+    </script>
+  </head>
+  <body>
+    <div id="cookie_menu" style="display: none">
+      <ul id="privacy_consent_option_list">
+        <li>
+          <input type="checkbox" name="marketing" id="cookie_marketing">
+          <label for="cookie_marketing">Markkinointi</label>
+          <i class="cookie_description_expand icon-angle-up"></i>
+          <span class="cookie_description" data-expanded="true">Custobar</span>
+        </li>
+        <li>
+          <input type="checkbox" name="analytics" id="cookie_analytics">
+          <label for="cookie_analytics">Analytiikka</label>
+          <i class="cookie_description_expand icon-angle-up"></i>
+          <span class="cookie_description" data-expanded="true">
+            Google Analytics<br>
+            Facebook
+          </span>
+        </li>
+        <li>
+          <input type="checkbox" name="site_functionality" id="cookie_site_functionality" checked="" disabled="">
+          <label for="cookie_site_functionality">Sivuston perustoiminnot</label>
+          <i class="icon-angle-down cookie_description_expand"></i>
+          <span class="cookie_description" data-expanded="false">Tietyt evästeet ovat aina käytössä jotta esimerkiksi ostoskori sekä kirjautuminen toimivat sivustolla.</span>
+        </li>
+      </ul>
+      <button onclick="cookies.consentToCookies()">ACCEPT COOKIES</button>
+    </div>
+    <div id="cookie"></div>
+    <div style="margin-top: 20px">
+      <button onclick="cookies.reset()">RESET COOKIES</button>
+      <button onclick="cookies.showCookies()">SHOW COOKIES</button>
+      <button onclick="cookies.showCookieMenu()">EDIT COOKIES</button>
+    </div>
+    <script id="custom-code-2">
+      console.log("CUSTOM CODE 2")
+    </script>
+    <script id="custom-code-3">
+      console.log("CUSTOM CODE 3")
+    </script>
+  </body>
+</html>
