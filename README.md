@@ -5,6 +5,8 @@
 
 # Usage
 
+The required script files are `cookies.js` and `js.cookie.mjs` - they need to be located in the same resource directory on the web server.
+
 Make the library visible to the page by importing the module in the head section:
 
 ```
