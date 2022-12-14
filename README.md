@@ -5,13 +5,13 @@
 
 # Usage
 
-The required script files are `cookies.js` and `js.cookie.mjs` - they need to be located in the same resource directory on the web server.
+The required script files are `cookie-consent.js` and `js-cookie.js` - they need to be located in the same resource directory on the web server.
 
 Make the library visible to the page by importing the module in the head section:
 
 ```
 <script type="module">
-  import cookies from './cookies.js'
+  import cookies from './cookie-consent.js'
   window.cookies = cookies
 </script>
 ```
