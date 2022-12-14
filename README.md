@@ -52,4 +52,11 @@ Loads GTM initialization script
 
 **loadScript(id)**
 
-Loads any script present in the document head or body with the id attribute matching the function parameter and executes it.
+Loads any script present in the document head or body with the id attribute matching the function parameter and executes it. Supports only script wrapped in a function. eg.
+```
+<script id="custom-code-1">
+  (function() {
+    console.log("THIS IS CUSTOM CODE 1")
+  })
+</script>
+```
