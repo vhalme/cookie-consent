@@ -1,6 +1,7 @@
-import Cookies from './js.cookie.mjs'
+import Cookies from './js-cookie.js'
 
-export var CONSENT_COOKIE_NAME = 'consent-cookie'
+var CONSENT_COOKIE_NAME = 'consent-cookie'
+var EXPIRATION_IN_DAYS = 365
 
 /** 
  * Defines behavior triggered by consent such as library initializations or proprietory cookie setup.
@@ -59,12 +60,25 @@ function getValueByPath(source, path) {
     }
 }
 
+function enableAllCookies() {
+    return {
+        marketing: {
+            custobar: '1'
+        },
+        analytics: {
+            google: '1',
+            facebook: '1'
+        },
+        basic: '1'
+    }
+}
+
 /** 
  * Encodes a structured consent settings object to a Base64 string and sets it to the site cookie
  * */
 function setConsentCookie(consentSettings) {
     var cookieBase64 = btoa(JSON.stringify(consentSettings))
-    Cookies.set(CONSENT_COOKIE_NAME, cookieBase64)
+    Cookies.set(CONSENT_COOKIE_NAME, cookieBase64, { expires: EXPIRATION_IN_DAYS })
 }
 
 /** 
@@ -145,9 +159,15 @@ export function showCookies() {
     
 }
 
-export function consentToCookies() {
+export function consentToSelectedCookies() {
     var userCookieSelections = extractCookieValues()
     setConsentCookie(userCookieSelections)
+    setAllowedCookies()
+}
+
+export function consentToAllCookies() {
+    var allCookiesEnabled = enableAllCookies()
+    setConsentCookie(allCookiesEnabled)
     setAllowedCookies()
 }
 
@@ -171,7 +191,8 @@ export function onPageLoad() {
         initUserSelections()
         setAllowedCookies()
     } else {
-        showCookieMenu()
+        /* Call the code to open cookie consent dialog here */
+        // showCookieMenu()
     }
 }
 
@@ -217,7 +238,7 @@ export function loadCustobarScript(companyToken) {
 export function loadScript(id) {
     var scriptElem = document.getElementById(id)
     if (scriptElem) {
-        eval(scriptElem.innerHTML)
+        eval(scriptElem.innerHTML.trim() + '()')
     }
 }
 
@@ -227,7 +248,8 @@ export default {
     getCookie: getCookie,
     showCookies: showCookies,
     setAllowedCookies: setAllowedCookies,
-    consentToCookies: consentToCookies,
+    consentToSelectedCookies: consentToSelectedCookies,
+    consentToAllCookies: consentToAllCookies,
     getCurrentCookie: getCurrentCookie,
     loadGTMScript: loadGTMScript,
     loadFBScript: loadFBScript,

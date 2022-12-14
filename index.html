@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="./style.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="module">
-      import cookies from './cookies.js'
+      import cookies from './cookie-consent.js'
       window.cookies = cookies
       window.onload = function() {
         cookies.onPageLoad()
@@ -29,7 +29,9 @@
       })
     </script>
     <script id="custom-code-1">
-      console.log("CUSTOM CODE 1")
+      (function() {
+        console.log("CUSTOM CODE 1")
+      })
     </script>
   </head>
   <body>
@@ -57,19 +59,24 @@
           <span class="cookie_description" data-expanded="false">Tietyt evästeet ovat aina käytössä jotta esimerkiksi ostoskori sekä kirjautuminen toimivat sivustolla.</span>
         </li>
       </ul>
-      <button onclick="cookies.consentToCookies()">ACCEPT COOKIES</button>
+      <button onclick="cookies.consentToSelectedCookies()">ACCEPT COOKIES</button>
     </div>
     <div id="cookie"></div>
     <div style="margin-top: 20px">
       <button onclick="cookies.reset()">RESET COOKIES</button>
       <button onclick="cookies.showCookies()">SHOW COOKIES</button>
       <button onclick="cookies.showCookieMenu()">EDIT COOKIES</button>
+      <button onclick="cookies.consentToAllCookies()">ACCEPT ALL COOKIES</button>
     </div>
     <script id="custom-code-2">
-      console.log("CUSTOM CODE 2")
+      (function() {
+        console.log("CUSTOM CODE 2")
+      })
     </script>
     <script id="custom-code-3">
-      console.log("CUSTOM CODE 3")
+      (function() {
+        console.log("CUSTOM CODE 3")
+      })
     </script>
   </body>
 </html>
