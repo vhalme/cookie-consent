@@ -23,15 +23,6 @@ function insertScript(src) {
     return js
 }
 
-function insertLink(href) {
-    var head = document.getElementsByTagName('head')[0]
-    var link = document.createElement('link')
-    link.rel = 'preload'
-    link.href = href
-    link.as = 'script'
-    head.appendChild(link);
-}
-
 function getValueByPath(source, path) {
     var pathElems = path.split('.')
     var value = source
@@ -84,7 +75,8 @@ function setConsentCookie(consentSettings) {
 /** 
  * Determines consent settings and calls handlers for those consent settings that are allowed.
  * */
-export function setAllowedCookies() {
+ export function useAllowedCookies(handlerKey) {
+
     var consentCookie = getCurrentCookie()
     if (!consentCookie) {
         console.log("Consent cookie unavailable")
@@ -93,9 +85,16 @@ export function setAllowedCookies() {
     Object.keys(ConsentHandler).forEach(function (key) {
         var cookieConsent = getValueByPath(consentCookie, key)
         if (cookieConsent === '1') {
-            var handler = ConsentHandler[key]
-            if (handler && handler instanceof Function) {
-                handler()
+            var handlers = ConsentHandler[key]
+            if (handlers) {
+                if (!handlerKey && handlers instanceof Function) {
+                    handlers()
+                } else if (handlerKey) {
+                    var handler = handlers[handlerKey]
+                    if (handler && handler instanceof Function) {
+                        handler()
+                    }
+                }
             }
         }
     })
@@ -141,34 +140,16 @@ export function getCurrentCookie() {
     }
 }
 
-export function showCookies() {
-    var currentCookies = getCurrentCookie()
-    console.log(currentCookies)
-    var elem = document.querySelector('#cookie')
-    if (currentCookies) {
-        elem.innerHTML = "<pre>" + 
-            "Marketing\n" + 
-            "&nbsp;&nbsp;-custobar: " + currentCookies.marketing.custobar + "\n" +
-            "Analytics\n" + 
-            "&nbsp;&nbsp;-google: " + currentCookies.analytics.google + "\n" +
-            "&nbsp;&nbsp;-facebook: " + currentCookies.analytics.facebook + "\n" +
-            "</pre>"
-    } else {
-        elem.innerHTML = "<pre>Consent cookie not set</pre>"
-    }
-    
-}
-
 export function consentToSelectedCookies() {
     var userCookieSelections = extractCookieValues()
     setConsentCookie(userCookieSelections)
-    setAllowedCookies()
+    useAllowedCookies('load')
 }
 
 export function consentToAllCookies() {
     var allCookiesEnabled = enableAllCookies()
     setConsentCookie(allCookiesEnabled)
-    setAllowedCookies()
+    useAllowedCookies('load')
 }
 
 export function reset() {
@@ -177,6 +158,7 @@ export function reset() {
 
 export function showCookieMenu() {
     var cookieMenu = document.getElementById("cookie_menu")
+    initUserSelections()
     cookieMenu.style.display = "block"
 }
 
@@ -188,8 +170,7 @@ export function hideCookieMenu() {
 export function onPageLoad() {
     var currentCookies = getCurrentCookie()
     if (currentCookies) {
-        initUserSelections()
-        setAllowedCookies()
+        useAllowedCookies('load')
     } else {
         /* Call the code to open cookie consent dialog here */
         // showCookieMenu()
@@ -210,20 +191,25 @@ export function loadFBScript(fbId) {
 }
 
 function initCustobar(companyToken) {
-    var cb = custobar({
+    var custobarInstance = custobar({
         company_token: companyToken,
         banners: {}
     });
+    window.custobarInstance = custobarInstance
     console.log('Starting custobar...')
-    cb.start();
+    custobarInstance.start();
     console.log('Custobar started.')
-    return cb
+    return custobarInstance
 }
 
-export function initCustobarAndTrackProduct(productId) {
-    var cb = initCustobar()
-    cb.track_browse_product(productId)
-    console.log('Tracking custobar product.')
+export function trackCustobarProduct(productId) {
+    if (custobarInstance) {
+        custobarInstance.track_browse_product(productId)
+        console.log('Tracking custobar product.')
+    } else {
+        console.error('Cannot track custobar product. Custobar not initialized.')
+    }
+    
 }
 
 export function loadCustobarScript(companyToken) {
@@ -246,14 +232,14 @@ export default {
     initUserSelections: initUserSelections,
     setConsentHandler: setConsentHandler,
     getCookie: getCookie,
-    showCookies: showCookies,
-    setAllowedCookies: setAllowedCookies,
+    useAllowedCookies: useAllowedCookies,
     consentToSelectedCookies: consentToSelectedCookies,
     consentToAllCookies: consentToAllCookies,
     getCurrentCookie: getCurrentCookie,
     loadGTMScript: loadGTMScript,
     loadFBScript: loadFBScript,
     loadCustobarScript: loadCustobarScript,
+    trackCustobarProduct: trackCustobarProduct,
     reset: reset,
     showCookieMenu: showCookieMenu,
     loadScript: loadScript,

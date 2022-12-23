@@ -5,32 +5,44 @@
     <link rel="stylesheet" href="./style.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="module">
-      import cookies from './cookie-consent.js'
-      window.cookies = cookies
+      import cookieConsent from './cookie-consent.js'
+      window.cookieConsent = cookieConsent
       window.onload = function() {
-        cookies.onPageLoad()
+        cookieConsent.onPageLoad()
       }
-      cookies.setConsentHandler({
-        'marketing.custobar': function() {
-          console.log("CALL CUSTOBAR INIT")
-          cookies.loadCustobarScript(/* Custobar copmany token */)
-          cookies.loadScript("custom-code-1")
+      cookieConsent.setConsentHandler({
+        'marketing.custobar': {
+          'load': function() {
+            cookieConsent.loadCustobarScript("<REPLACE_WITH_COMPANY_TOKEN>")
+            cookieConsent.loadScript("custom-code-1")
+          },
+          'track': function() {
+            cookieConsent.trackCustobarProduct("<REPLACE_WITH_PRODUCT_ID>")
+            cookieConsent.loadScript("custom-code-4")
+          }
         },
-        'analytics.google': function() {
-          console.log("CALL GA INIT")
-          cookies.loadGTMScript(/* GTM id */)
-          cookies.loadScript("custom-code-2")
+        'analytics.google': {
+          'load': function() {
+            cookieConsent.loadGTMScript("<REPLACE_WITH_GTM_ID>")
+            cookieConsent.loadScript("custom-code-2")
+          }
         },
-        'analytics.facebook': function() {
-          console.log("CALL FB INIT")
-          cookies.loadFBScript(/* FB id */)
-          cookies.loadScript("custom-code-3")
-        }
+        'analytics.facebook': {
+          'load': function() {
+            cookieConsent.loadFBScript("<REPLACE_WITH_FB_ID>")
+            cookieConsent.loadScript("custom-code-3")
+          }
+        }    
       })
     </script>
     <script id="custom-code-1">
       (function() {
-        console.log("CUSTOM CODE 1")
+        console.log("INITIALIZING CUSTOBAR <CUSTOBAR COMPANY ID HERE>")
+      })
+    </script>
+    <script id="custom-code-4">
+      (function() {
+        console.log("TRACKING CUSTOBAR PRODUCT <CUSTOBAR PRODUCT ID HERE>")
       })
     </script>
   </head>
@@ -59,23 +71,26 @@
           <span class="cookie_description" data-expanded="false">Tietyt evästeet ovat aina käytössä jotta esimerkiksi ostoskori sekä kirjautuminen toimivat sivustolla.</span>
         </li>
       </ul>
-      <button onclick="cookies.consentToSelectedCookies()">ACCEPT COOKIES</button>
+      <button onclick="cookieConsent.consentToSelectedCookies()">ACCEPT COOKIES</button>
+      <button onclick="cookieConsent.consentToAllCookies(); cookieConsent.showCookieMenu();">ACCEPT ALL COOKIES</button>
     </div>
     <div id="cookie"></div>
     <div style="margin-top: 20px">
-      <button onclick="cookies.reset()">RESET COOKIES</button>
-      <button onclick="cookies.showCookies()">SHOW COOKIES</button>
-      <button onclick="cookies.showCookieMenu()">EDIT COOKIES</button>
-      <button onclick="cookies.consentToAllCookies()">ACCEPT ALL COOKIES</button>
+      <button onclick="cookieConsent.reset()">RESET COOKIES</button>
+      <button onclick="cookieConsent.showCookieMenu()">EDIT COOKIES</button>
+    </div>
+    <div style="margin-top: 20px">
+      <button onclick="cookieConsent.useAllowedCookies('load')">SIMULATE LOADING</button>
+      <button onclick="cookieConsent.useAllowedCookies('track')">SIMULATE TRACKING</button>
     </div>
     <script id="custom-code-2">
       (function() {
-        console.log("CUSTOM CODE 2")
+        console.log("INITIALIZAING GA <GTM ID HERE>")
       })
     </script>
     <script id="custom-code-3">
       (function() {
-        console.log("CUSTOM CODE 3")
+        console.log("INITIALIZING FB <FB ID HERE>")
       })
     </script>
   </body>
