@@ -17,7 +17,7 @@
             cookieConsent.loadScript("custom-code-1")
           },
           'track': function() {
-            cookieConsent.trackCustobarProduct("<REPLACE_WITH_PRODUCT_ID>")
+            cookieConsent.trackCustobarProduct("<REPLACE_WITH_PRODUCT_ID>", "<REPLACE_WITH_COMPANY_TOKEN>")
             cookieConsent.loadScript("custom-code-4")
           }
         },
@@ -44,6 +44,10 @@
       (function() {
         console.log("TRACKING CUSTOBAR PRODUCT <CUSTOBAR PRODUCT ID HERE>")
       })
+    </script>
+    <script type="module">
+      console.log("CALL TRACK ON LANDING")
+      cookieConsent.useAllowedCookies('track')
     </script>
   </head>
   <body>

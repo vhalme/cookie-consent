@@ -16,6 +16,7 @@ export var ConsentHandler = {
 function insertScript(src) {
     var head = document.getElementsByTagName('head')[0]
     var js = document.createElement('script')
+    js.id = 'custobar-script'
     js.type = 'text/javascript'
     js.async = true
     js.src = src
@@ -202,23 +203,37 @@ function initCustobar(companyToken) {
     return custobarInstance
 }
 
-export function trackCustobarProduct(productId) {
-    if (custobarInstance) {
+export function trackCustobarProduct(productId, companyToken) {
+    if (window.custobarInstance) {
         custobarInstance.track_browse_product(productId)
-        console.log('Tracking custobar product.')
+        console.log('Tracking custobar product ' + productId)
     } else {
-        console.error('Cannot track custobar product. Custobar not initialized.')
+        console.log('Custobar not initialized. Initializing it first.')
+        loadCustobarScript(companyToken, function(custobarInstance) {
+            custobarInstance.track_browse_product(productId)
+            console.log('Tracking custobar product ' + productId)
+        })
     }
     
 }
 
-export function loadCustobarScript(companyToken) {
+export function loadCustobarScript(companyToken, done) {
+    
+    if (window.custobarInstance && done && done instanceof Function) {
+        done(window.custobarInstance)
+        return
+    }
+
     var scriptSrc = 'https://custobar.com/js/custobar.js'
     var scriptElem = insertScript(scriptSrc)
     scriptElem.addEventListener('load', () => {
         console.log('Custobar script src loaded')
-        initCustobar(companyToken)
+        var custobarInstance = initCustobar(companyToken)
+        if (done && done instanceof Function) {
+            done(custobarInstance)
+        }
     });
+
 }
 
 export function loadScript(id) {
